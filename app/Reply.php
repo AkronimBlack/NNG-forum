@@ -9,11 +9,9 @@ class Reply extends Model
     use FavoriteTrait;
     use RecordsActivity;
 
-    protected $with = ['owner', 'thread' ,'favorites'];
+    protected $with = ['owner' , 'favorites'];
 
-//    protected $withCount = ['favorites'];
-
-    protected $appends = ['favoritesCount'];
+    protected $appends = ['favoritesCount' , 'isFavorited'];
 
     protected $guarded = [];
 
@@ -31,6 +29,7 @@ class Reply extends Model
     {
         $this->recordActivity('deleted');
     }
+
 
 
 

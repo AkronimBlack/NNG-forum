@@ -55,6 +55,17 @@ if (token) {
 //     encrypted: true
 // });
 window.Vue = require('vue');
+
+Vue.prototype.authorize = function (handler) {
+    //add more auth
+
+    let user = window.App.user;
+
+    if(!user) return false;
+
+    return handler(user);
+}
+
 window.events = new Vue();
 
 window.flash = function (message){

@@ -10,7 +10,7 @@ class Thread extends Model
     use RecordsActivity;
     protected $guarded = [];
 
-    // protected $with = ['channel' , 'owner'];
+     protected $with = ['channel' , 'owner'];
 
     protected static function boot()
     {
@@ -45,13 +45,15 @@ class Thread extends Model
 
     public function addReply($reply)
     {
-        $this->replies()->create($reply);
+        return $this->replies()->create($reply);
     }
 
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
+
+
     public function logDeleteActivity()
     {
         $this->recordActivity('deleted');

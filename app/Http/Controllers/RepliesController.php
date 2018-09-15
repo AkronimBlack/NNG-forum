@@ -47,10 +47,14 @@ class RepliesController extends Controller
             'body'=>'required'
         ]);
         
-        $thread->addReply([
+       $reply = $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
         ]);
+
+        if (request()->expectsJson()){
+            return $reply->load('owner');
+        }
 
         return back()->with('flash' , 'Your reply has been stored!');
     }
@@ -101,6 +105,7 @@ class RepliesController extends Controller
         $this->authorize('update', $reply);
         $reply->update(['trash' => true ]);
         $reply->logDeleteActivity();
+        $reply->favorites->each->delete();
 
 
         if (request()->wantsJson()) {

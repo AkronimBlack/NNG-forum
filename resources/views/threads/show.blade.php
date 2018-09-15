@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+    <thread-view :initial-replies-count="{{$thread->replies_count}}" inline-template>
     <div class="container-fluid">
 
 
@@ -15,14 +15,16 @@
                     <hr>
                     <h3 class="text-center">Thread discussion</h3>
                     <hr>
-                    {{--LIST OUT ALL REPLIES IN DB--}}
-                    @include('threads.replies')
-                    {{--AUTH AND ALLOW OR DENY OPTION TO COMMENT--}}
-                    @if(auth()->check())
-                        @include('threads.replyForm')
-                    @else
-                        <p class="text-center">Sign in to comment</p>
-                    @endif
+                    <replies :data="{{$thread->replies}}" @removed="repliesCount--"></replies>
+
+
+                    {{--@if(auth()->check())--}}
+
+                        {{--@include('threads.replyForm')--}}
+                        {{--@include('layouts.errors')--}}
+                    {{--@else--}}
+                        {{--<p class="text-center">Sign in to comment</p>--}}
+                    {{--@endif--}}
                     {{--IF THREAD IS DELETED--}}
                 @else
                     <div class="card-header text-center">
@@ -43,11 +45,12 @@
                         Channel:
                         <a href="/threads/{{$thread->channel->name}}">{{$thread->channel->name}}</a>
                         <hr>
-                        Number of replies: {{$thread->replies_count}}
+                        Number of replies: <span v-text="repliesCount"></span>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+    </thread-view>
 @endsection

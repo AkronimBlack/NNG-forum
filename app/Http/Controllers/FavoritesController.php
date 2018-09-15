@@ -8,12 +8,13 @@ use App\Favorite;
 use App\Reply;
 
 class FavoritesController extends Controller
-{   
+{
 
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,26 +38,25 @@ class FavoritesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Reply $reply)
     {
         //polimorphics of eloquent -> inserts favorite_id and favorited_type by itself
 
-//        $reply->favorite();
+
+        $reply->favorite();
 
 
-                $reply->favorite();
-
-//        $reply->favorite();
-
-        }
+    }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -67,7 +67,8 @@ class FavoritesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -78,8 +79,9 @@ class FavoritesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -90,12 +92,19 @@ class FavoritesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Reply $reply)
     {
-        //
+        $reply->unfavorite();
+
+        if (request()->wantsJson()) {
+            return response([], 204);
+        }
+
+        return back()->with('flash', 'You have unfavorited a reply');
     }
 
 }

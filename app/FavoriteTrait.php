@@ -7,7 +7,13 @@ namespace App;
 
 trait FavoriteTrait
 {
-//    protected $with = ['favorites'];
+
+    public static function bootFavoriteTrait()
+    {
+        static::deleting(function ($model){
+           $model->favorites->each->delete();
+        });
+    }
 
 	public function favorites()
     {
@@ -16,11 +22,21 @@ trait FavoriteTrait
 
     public function favorite()
     {
+        $attributes = ['user_id'=>auth()->id()];
+
         if(! $this->isFavorited())
         {
-            $this->favorites()->create(['user_id'=>auth()->id()]);
+            $this->favorites()->create($attributes);
             return back();
         }
+    }
+
+    public function unfavorite()
+    {
+        $attributes = ['user_id'=>auth()->id()];
+
+        $this->favorites()->where($attributes)->get()->each->delete();
+
     }
 
     public function isFavorited()
@@ -28,9 +44,14 @@ trait FavoriteTrait
         return !! $this->favorites->where('user_id' , auth()->id())->count();
     }
 
+    public function getIsFavoritedAttribute()
+    {
+        return $this->isFavorited();
+    }
+
     public function getFavoritesCountAttribute()
     {
-        return $this->favorites()->count();
+        return $this->favorites->count();
 
     }
 

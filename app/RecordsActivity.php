@@ -17,9 +17,9 @@ trait RecordsActivity
                 $model->recordActivity($event);
             });
         }
-//        static::deleting(function ($model) {
-//            $model->activity()->delete();
-//        });
+        static::deleting(function ($model) {
+            $model->activity()->delete();
+        });
     }
 
     public function activity()

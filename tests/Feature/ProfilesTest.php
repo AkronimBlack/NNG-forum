@@ -15,13 +15,13 @@ class ProfilesTest extends TestCase
         $this->actingAs(factory('App\User')->create());
     }
     
-    /** @test */
-    public function a_user_has_a_profile()
-    {
-        $user = factory('App\User')->create();
-        $response = $this->get('/profiles/' . $user->name);
-        $response->assertSee($user->name);
-    }
+//    /** @test */
+//    public function a_user_has_a_profile()
+//    {
+//        $user = factory('App\User')->create();
+//        $response = $this->get('/profiles/' . $user->name);
+//        $response->assertSee($user->name);
+//    }
 
     /** @test */
     public function profiles_display_all_threads_that_are_not_trashed()

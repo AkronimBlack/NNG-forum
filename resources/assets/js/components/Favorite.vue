@@ -12,25 +12,33 @@
         data(){
             return{
                 favoritesCount: this.reply.favoritesCount,
-                isFavorited: false
+                isFavorited: this.reply.isFavorited
             }
         },
 
         computed:{
             classes(){
                 return ['btn' , this.isFavorited ? 'btn-primary' : 'btn-default'];
+            },
+            endpoint()
+            {
+                return '/replies/' + this.reply.id + '/favorite';
             }
         },
 
         methods: {
             toggle(){
-                if(this.isFavorited){
-                    axios.delete('/replies/' + this.reply.id + '/favorite');
-                }else{
-                    axios.post('/replies/' + this.reply.id + '/favorite');
-                    this.isFavorited = true;
-                    this.favoritesCount++;
-                }
+                this.isFavorited ? this.destroy() : this.create();
+            },
+            create(){
+                axios.post(this.endpoint);
+                this.isFavorited = true;
+                this.favoritesCount++;
+            },
+            destroy(){
+                axios.delete(this.endpoint);
+                this.isFavorited = false;
+                this.favoritesCount--;
             }
         }
     }
