@@ -12,6 +12,7 @@
             <ul class="navbar-nav mr-auto">
                 <a class="dropdown-item" href="/threads">All Threads</a></a>
                 <a class="dropdown-item" href="/threads?popular=1">Most Commented</a></a>
+                <a class="dropdown-item" href="/threads?uncommented=1">Uncommented</a></a>
             </ul>
 
             <!-- Right Side Of Navbar -->

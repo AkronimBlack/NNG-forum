@@ -9,7 +9,7 @@ use App\User;
 class ThreadFilter extends Filters
 {	
 
-	protected $filters = ['by' , 'popular'];	
+	protected $filters = ['by' , 'popular' , 'uncommented'];
 
 	protected function by($username)
 	{
@@ -24,4 +24,9 @@ class ThreadFilter extends Filters
 		
 		return $this->builder->orderBy('replies_count' , 'desc');
 	}
+
+	public function uncommented()
+    {
+        return $this->builder->doesntHave('replies');
+    }
 }

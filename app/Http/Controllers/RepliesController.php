@@ -16,12 +16,14 @@ class RepliesController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'index']);
     }
 
-    public function index()
+
+
+    public function index($channelId , Thread $thread)
     {
-        //
+        return $thread->replies()->where('trash' , false)->latest()->paginate(10);
     }
 
     /**
@@ -106,7 +108,7 @@ class RepliesController extends Controller
         $reply->update(['trash' => true ]);
         $reply->logDeleteActivity();
         $reply->favorites->each->delete();
-
+//        $reply->thread->decrement('replies_count');
 
         if (request()->wantsJson()) {
             return response([], 204);

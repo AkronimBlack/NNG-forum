@@ -10,7 +10,7 @@ class ParticipateInForumTest extends TestCase
 	use DatabaseMigrations;
 
     /** @test */
-    public function an_unauth_user_may_participate()
+    public function an_unauth_user_may_not_participate()
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
@@ -34,8 +34,8 @@ class ParticipateInForumTest extends TestCase
 
     	$this->post($thread->path() . '/replies' , $reply->toArray());
         
-        $this->get($thread->path())
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies' , ['body' => $reply->body]);
+//        $this->assertEquals(1, $thread->fresh()->replies_count);
     	
     }
 }

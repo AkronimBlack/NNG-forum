@@ -36,8 +36,7 @@ class ReadThreadsTest extends TestCase
     {
         $reply = factory('App\Reply')->create(['thread_id'=>$this->thread->id]);
 
-        $this->get($this->thread->path())
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies' , ['body' => $reply->body]);
     }
 
     /** @test  */
@@ -69,20 +68,44 @@ class ReadThreadsTest extends TestCase
             ->assertDontSee($threadByOther->title);
     }
     
-    // /** @test  */
-    public function a_user_can_filter_threads_by_popularity()
+//     /** @test  */
+//    public function a_user_can_filter_threads_by_popularity()
+//    {
+//
+//        $thread0replies = $this->thread;
+//        $thread3replies = factory('App\Thread')->create();
+//        create('App\Reply', ['thread_id' => $thread3replies->id], 3);
+//        $thread2replies = factory('App\Thread')->create();
+//        create('App\Reply', ['thread_id' => $thread2replies->id], 2);
+//        dd($thread3replies);
+//
+//        $response = $this->getJson('/threads?popular=1')->json();
+//
+//
+//        //failes couze of pagination
+//        $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
+//    }
+
+    /** @test  */
+    function a_user_can_request_all_replies_for_a_given_thread()
     {
-        $thread0replies = $this->thread;
-        $thread3replies = factory('App\Thread')->create();
-        create('App\Reply', ['thread_id' => $thread3replies->id], 3);
-        $thread2replies = factory('App\Thread')->create();
-        create('App\Reply', ['thread_id' => $thread2replies->id], 2);
+        $thread = factory('App\Thread')->create();
+        create('App\Reply' , ['thread_id' => $thread->id] , 2);
 
+        $response = $this->getJson($thread->path() . '/replies')->json();
+//        dd($response);
+        $this->assertCount(2 , $response['data']);
+        $this->assertEquals(2 , $response['total']);
+    }
+    /** @test  */
+    function a_user_can_sort_by_unanswerd()
+    {
+        $thread = factory('App\Thread')->create();
+        factory('App\Reply')->create(['thread_id' => $thread->id]);
+//        create('App\Reply', ['thread_id' => $thread->id]);
 
-        $response = $this->getJson('/threads?popular=1')->json();
-
-
-        //failes couze of pagination
-        $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
+        $response = $this->getJson('/threads?uncommented=1')->json();
+//        dd($response);
+        $this->assertCount(1, $response['data']);
     }
 }
