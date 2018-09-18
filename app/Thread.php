@@ -10,7 +10,9 @@ class Thread extends Model
     use RecordsActivity;
     protected $guarded = [];
 
-     protected $with = ['channel' , 'owner'];
+    protected $with = ['channel', 'owner'];
+
+    protected $appends = ['isSubscribedTo'];
 
     protected static function boot()
     {
@@ -30,7 +32,7 @@ class Thread extends Model
     public function replies()
     {
         return $this->hasMany(Reply::class)
-            ->where('trash' , 0);
+                    ->where('trash', 0);
     }
 
     public function owner()
@@ -60,4 +62,30 @@ class Thread extends Model
         $this->recordActivity('deleted');
     }
 
+    public function subscribe($userId = null)
+    {
+        $this->subscriptions()->create([
+
+           'user_id' => $userId ?: auth()->id()
+        ]);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscriptions::class);
+    }
+
+    public function unsubscribe($userId = null)
+    {
+        $this->subscriptions()
+             ->where('user_id' , $userId ?: auth()->id())
+             ->delete();
+    }
+
+    public function getIsSubscribedToAttribute()
+    {
+        return $this->subscriptions()
+            ->where('user_id' , auth()->id())
+            ->exists();
+    }
 }

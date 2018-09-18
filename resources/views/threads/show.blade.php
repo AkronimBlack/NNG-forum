@@ -2,6 +2,7 @@
 
 @section('content')
     <thread-view :initial-replies-count="{{$thread->replies_count}}" inline-template>
+
         <div class="container-fluid">
             <div class="row">
                 {{--THREAD PRINT OUT WITH REPLIS--}}
@@ -16,7 +17,9 @@
                         <replies
                                  @removed="repliesCount--"
                                  @added="repliesCount++">
+
                         </replies>
+
                     @else
                         <div class="card-header text-center">
                             <h2>This Thread ({{$thread->title}}) has been deleted</h2>
@@ -38,10 +41,18 @@
                             <hr>
                             Number of replies: <span v-text="repliesCount"></span>
                         </div>
+                        <div class="card-footer text-center">
+                            <subscribe :active="{{ json_encode($thread->isSubscribedTo) }}"></subscribe>
+                        </div>
+
                     </div>
+
+
+
                 </div>
 
             </div>
         </div>
     </thread-view>
+
 @endsection

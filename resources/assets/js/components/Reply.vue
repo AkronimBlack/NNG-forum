@@ -81,9 +81,6 @@
 
                 this.$emit('deleted' , this.data.id);
 
-                // $(this.$el).fadeOut(300, () => {
-                //     flash('Reply deleted');
-                // });
 
 
             }
