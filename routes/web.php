@@ -37,7 +37,12 @@ Route::PATCH('/replies/{reply}' , 'RepliesController@update');
 Route::post('/replies/{reply}/favorite' , 'FavoritesController@store');
 Route::DELETE('/replies/{reply}/favorite' , 'FavoritesController@destroy');
 
-Route::get('/profiles/{user}' , 'ProfilesController@show');
+Route::get('/profiles/{user}' , 'ProfilesController@show')->name('profile');
+
+Route::DELETE('/profiles/{user}/notifications/{notification}' , 'UserNotificationsController@destroy');
+Route::get('/profiles/{user}/notifications' , 'UserNotificationsController@index');
+
+//remake the rout bs
 
 
 

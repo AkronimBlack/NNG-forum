@@ -37,4 +37,49 @@ class NotificationsTest extends TestCase
         $this->assertCount(1, auth()->user()->fresh()->notifications);
 
     }
+
+    /** @test */
+    public function a_user_can_mark_a_notification_as_read()
+    {
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        $thread = factory('App\Thread')->create()->subscribe();
+
+        $otherUser = factory('App\User')->create();
+
+        $thread->addReply([
+            'user_id' => $otherUser->id,
+            'body'    => 'something',
+        ]);
+
+        $this->assertCount(1, auth()->user()->unreadNotifications);
+
+        $notificationId = auth()->user()->unreadNotifications->first()->id;
+
+        $this->delete('/profiles/'. auth()->user()->name .'/notifications/' . $notificationId);
+
+        $this->assertCount(0, auth()->user()->fresh()->unreadNotifications);
+    }
+
+
+    /** @test */
+    public function a_user_can_fetch_unread_notifications()
+    {
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        $thread = factory('App\Thread')->create()->subscribe();
+
+        $otherUser = factory('App\User')->create();
+
+        $thread->addReply([
+            'user_id' => $otherUser->id,
+            'body'    => 'something',
+        ]);
+
+        $response = $this->getJson('/profiles/'. auth()->user()->name .'/notifications')->json();
+
+        $this->assertCount(1 , $response);
+    }
 }
