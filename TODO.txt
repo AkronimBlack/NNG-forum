@@ -1,0 +1,5 @@
+Set up thread voting -> set up trending/most voted threads
+Set up file upload (for profile pictures/text editor pictures) -> set up text editor (CKeditor ? Vue tip-tap??)
+Make the landing page
+Set up mail notifications -> set up password recovery
+Pretty it up
