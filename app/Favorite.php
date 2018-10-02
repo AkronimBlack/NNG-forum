@@ -12,9 +12,6 @@ class Favorite extends Model
 {
     use RecordsActivity;
 
-//    protected $with = ['reply'];
-
-//    protected $appends = ['favoritesCount'];
 
     protected $guarded = [];
 
