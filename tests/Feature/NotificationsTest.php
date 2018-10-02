@@ -11,11 +11,17 @@ class NotificationsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+    }
+
     /** @test */
     function a_notification_is_prepared_when_a_subscribed_thread_recives_a_reply_by_other_user()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+
 
         $thread = factory('App\Thread')->create()->subscribe();
 
@@ -41,17 +47,19 @@ class NotificationsTest extends TestCase
     /** @test */
     public function a_user_can_mark_a_notification_as_read()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
 
         $thread = factory('App\Thread')->create()->subscribe();
 
         $otherUser = factory('App\User')->create();
 
+
+
         $thread->addReply([
             'user_id' => $otherUser->id,
             'body'    => 'something',
         ]);
+
+
 
         $this->assertCount(1, auth()->user()->unreadNotifications);
 
@@ -66,8 +74,6 @@ class NotificationsTest extends TestCase
     /** @test */
     public function a_user_can_fetch_unread_notifications()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
 
         $thread = factory('App\Thread')->create()->subscribe();
 
